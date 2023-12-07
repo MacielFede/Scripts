@@ -1,27 +1,35 @@
 #!/bin/bash
-echo "I'm going to commit every change in your project and push it to the origin."
-echo "Remember to execute the file being on the projects root, and in your working branch."
+echo -e "\033[32m -> I'm going to commit every change in your project and push it to the origin with the branch your stood on.\033[0m"
 
 # echo "Reminder:\nIf you want to change your projects root you have to change it in the projectRoot.txt file that is in the same folder as this file"
 branch=$(git symbolic-ref --short HEAD)
+if [ $? -ne 0 ]; then 
+  # The command failed, print an error message 
+  echo -e "\033[31m -> You're not in a git repository :()\033[0m"
+  # Exit the script with a non-zero exit status to indicate failure 
+  exit 1 
+fi 
 #This command asigns the output of git symbolic-ref --short HEAD to the variable "branch". 
 #Essentally I'm getting the actual branch that you are standing on
-read -p "Insert your commit message: " message
-
-# if ! [ -e ./projectRoot.txt ];
-# The line above checks if the projectRoot.txt file exists
-# then
-#   read -p "Insert your projects root folder: " root
-#   echo $root > projectRoot.txt
-# else
-#   root=$(cat ./projectRoot.txt)
-# fi
-
-# All the code commented reffers to the old way that I did this script. 
-# In that solution the user had to insert the project root manualy
+read -p $'\e[32m -> Insert your commit message here: \e[0m: ' message
 
 git add .
 git commit -am "$message"
 # commit all the changes made with a message provided by the user
-git push -u origin $branch
-# push changes to remote repo in the branch that you are standing on
+if [ $? -ne 0 ]; then 
+  # The command failed, print an error message 
+  echo -e "\033[31m -> There's a problem with your commit :(\033[0m"
+  # Exit the script with a non-zero exit status to indicate failure 
+  exit 1 
+else
+  git push -u origin $branch
+  # push changes to remote repo in the branch that you are standing on
+  if [ $? -ne 0 ]; then 
+    # The command failed, print an error message 
+    echo -e "\033[31m -> There's a problem with your push :( Debug the problem and try again later.\033[0m"
+    # Exit the script with a non-zero exit status to indicate failure 
+    exit 1
+  else
+    echo -e "\033[33m -> All finished :)\033[0m"
+  fi 
+fi 
