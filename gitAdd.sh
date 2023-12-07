@@ -1,7 +1,6 @@
 #!/bin/bash
 echo -e "\033[32m -> I'm going to commit every change in your project and push it to the origin with the branch your stood on.\033[0m"
 
-# echo "Reminder:\nIf you want to change your projects root you have to change it in the projectRoot.txt file that is in the same folder as this file"
 branch=$(git symbolic-ref --short HEAD)
 if [ $? -ne 0 ]; then 
   # The command failed, print an error message 
@@ -25,9 +24,7 @@ else
   git push -u origin $branch
   # push changes to remote repo in the branch that you are standing on
   if [ $? -ne 0 ]; then 
-    # The command failed, print an error message 
     echo -e "\033[31m -> There's a problem with your push :( Debug the problem and try again later.\033[0m"
-    # Exit the script with a non-zero exit status to indicate failure 
     exit 1
   else
     echo -e "\033[33m -> All finished :)\033[0m"
